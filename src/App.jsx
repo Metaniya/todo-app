@@ -6,14 +6,25 @@ export default function App() {
 
   const addTask = () => {
     if (!task.trim()) return;
-    setTasks([...tasks, task]);
+    setTasks([...tasks, { text: task, done: false }]);
     setTask("");
+  };
+
+  const toggleTask = (index) => {
+    const newTasks = [...tasks];
+    newTasks[index].done = !newTasks[index].done;
+    setTasks(newTasks);
+  };
+
+  const deleteTask = (index) => {
+    setTasks(tasks.filter((_, i) => i !== index));
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-6 rounded-xl shadow-md w-96">
         <h1 className="text-2xl font-bold mb-4 text-center">To-Do List</h1>
+
         <div className="flex mb-4">
           <input
             type="text"
@@ -32,8 +43,22 @@ export default function App() {
 
         <ul className="space-y-2">
           {tasks.map((t, index) => (
-            <li key={index} className="bg-gray-50 p-2 rounded shadow">
-              {t}
+            <li
+              key={index}
+              className="flex justify-between items-center bg-gray-50 p-2 rounded shadow"
+            >
+              <span
+                onClick={() => toggleTask(index)}
+                className={`cursor-pointer ${t.done ? "line-through text-gray-500" : ""}`}
+              >
+                {t.text}
+              </span>
+              <button
+                onClick={() => deleteTask(index)}
+                className="text-red-500 hover:text-red-700"
+              >
+                ✕
+              </button>
             </li>
           ))}
         </ul>
